@@ -1,0 +1,32 @@
+
+version: '3.8'
+
+services:
+  db:
+    image: postgres
+    restart: always
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: mydatabase
+    volumes:
+      - mydatabase_volume:/var/lib/postgresql/data
+      # - logistics_optimization_postgres_data:/var/lib/postgresql/data
+      # - mydatabase_volume:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+
+  app:
+    build: .
+    depends_on:
+      - db
+    environment:
+      # DATABASE_URL: "postgresql://mfo_user:mfo_pass@db/mfo_db"
+      DATABASE_URL: "postgres://postgres:postgres@db/mydatabase"
+    volumes:
+      - .:/app
+    ports:
+      - "8000:8000"
+
+volumes:
+  mydatabase_volume: # Declare the volume
